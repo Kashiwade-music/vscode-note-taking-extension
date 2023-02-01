@@ -19,6 +19,11 @@
         "command": "vscode-note-taking-extension.createNote",
         "title": "Create New Note",
         "category": "Note Taking"
+      },
+      {
+        "command": "vscode-note-taking-extension.initDir",
+        "title": "Initialize Note Taking Directory",
+        "category": "Note Taking"
       }
     ],
     "configuration": {
