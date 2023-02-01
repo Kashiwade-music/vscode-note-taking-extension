@@ -10,16 +10,50 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:vscode-note-taking-extension.helloWorld"
+    "onCommand:vscode-note-taking-extension.createNote"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "vscode-note-taking-extension.helloWorld",
-        "title": "Hello World"
+        "command": "vscode-note-taking-extension.createNote",
+        "title": "Create New Note",
+        "category": "Note Taking"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "vscode-note-taking-extension",
+      "properties": {
+        "vscode-note-taking-extension.categories": {
+          "type": "object",
+          "description": "Categories to be used for note taking.",
+          "default": {
+            "General": {
+              "Daily Notes": {},
+              "Tips": {
+                "Programming": {},
+                "Life": {}
+              }
+            }
+          }
+        },
+        "vscode-note-taking-extension.templates": {
+          "type": "object",
+          "description": "Templates to be used for note taking.",
+          "default": {
+            "default": [
+              "---",
+              "tags: ${1:First tabstop}",
+              "---",
+              "# ${2:A second tabstop}",
+              "Note Created: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+              "",
+              "## ${3:third tabstop}"
+            ]
+          }
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
