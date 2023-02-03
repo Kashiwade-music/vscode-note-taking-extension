@@ -68,7 +68,22 @@ export const getSettingsJsonString = () => {
       "## Subtitle",
       "### Subsubtitle"
     ]
-  }
+  },
+
+  // it is recommended to install the following extensions: mushan.vscode-paste-image
+  "pasteImage.path": "\${projectRoot}/attachments/"
+}
+  `;
+};
+
+export const getRecommendedExtensions = () => {
+  return `{
+  // List of extensions which should be recommended for users of this extension.
+  "recommendations": [
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced",
+    "mushan.vscode-paste-image"
+  ]
 }
   `;
 };
