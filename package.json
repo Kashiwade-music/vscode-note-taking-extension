@@ -32,15 +32,7 @@
         "vscode-note-taking-extension.categories": {
           "type": "object",
           "description": "Categories to be used for note taking.",
-          "default": {
-            "General": {
-              "Daily Notes": {},
-              "Tips": {
-                "Programming": {},
-                "Life": {}
-              }
-            }
-          }
+          "default": {}
         },
         "vscode-note-taking-extension.templates": {
           "type": "object",
