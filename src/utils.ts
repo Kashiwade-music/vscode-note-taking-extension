@@ -7,6 +7,12 @@ export interface StringKeyObject {
 export const genNewNotePath = async (
   categories: StringKeyObject
 ): Promise<string> => {
+  if (Object.keys(categories).length === 0) {
+    vscode.window.showErrorMessage(
+      "No categories defined. Please add some at .vscode/settings.json"
+    );
+    return "";
+  }
   let category = (await vscode.window.showQuickPick(
     Object.keys(categories)
   )) as unknown as string;

@@ -25,6 +25,9 @@ export function activate(context: vscode.ExtensionContext) {
         const path = await utils.genNewNotePath(
           config.get("categories") as utils.StringKeyObject
         );
+        if (path === "") {
+          return;
+        }
         const templateSnippetString = await utils.getTemplate(
           config.get("templates") as utils.TemplatesObject
         );
