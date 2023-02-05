@@ -31,6 +31,7 @@ export const getTemplate = async (templates: TemplatesObject) => {
 
 export const getSettingsJsonString = () => {
   return `{
+{
   // Categories are used to organize your notes.
   // You can add as many categories as you want.
   // The categories are organized in a tree structure.
@@ -38,15 +39,15 @@ export const getSettingsJsonString = () => {
   "vscode-note-taking-extension.categories": {
     "General": {
       "Daily Notes": {},
-      "Progress Report": {},
+      "Progress Report": {}
     },
     "Tips": {
-        "Programming": {
-          "Python": {},
-          "JavaScript": {},
-        },
-        "Life": {}
-      }
+      "Programming": {
+        "Python": {},
+        "JavaScript": {}
+      },
+      "Life": {}
+    }
   },
 
   // Templates are used to generate the content of the note.
@@ -63,17 +64,12 @@ export const getSettingsJsonString = () => {
       "",
       "## \${3:third tabstop}"
     ],
-    "Template 2": [
-      "# Title",
-      "## Subtitle",
-      "### Subsubtitle"
-    ]
+    "Template 2": ["# Title", "## Subtitle", "### Subsubtitle"]
   },
 
   // it is recommended to install the following extensions: mushan.vscode-paste-image
   "pasteImage.path": "\${projectRoot}/attachments/"
-}
-  `;
+}`;
 };
 
 export const getRecommendedExtensions = () => {
