@@ -18,7 +18,7 @@ create your note by a few click
 
 #### original image
 4288x2848 JPEG 1.11 MB (252,393 bytes)
-![Alt text](doc/lion_1000x664_raw.jpg)
+![Alt text](doc/lion_4288x2848_raw.jpg)
 
 #### AVIF Q=50
 4288x2848 AVIF 365.08 KB (373,843 bytes)
