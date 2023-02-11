@@ -95,98 +95,134 @@ export const convertAttachedImage = async () => {
   });
 
   if (webpOrAvif === "WebP") {
-    imgPathArray = imgPathArray.filter((imgPath) => {
-      return !imgPath.endsWith(".webp");
-    });
+    imgPathArray = Array.from(
+      new Set(
+        imgPathArray.filter((imgPath) => {
+          return !imgPath.endsWith(".webp");
+        })
+      )
+    );
     const config = vscode.workspace.getConfiguration(
       "vscode-note-taking-extension.webp"
     );
-    for (const imgPath of imgPathArray) {
-      try {
-        const imgAbsPath = path.isAbsolute(imgPath)
-          ? imgPath
-          : path.resolve(path.dirname(markdownFilePath), imgPath);
-        await vscode.workspace.fs.stat(vscode.Uri.file(imgAbsPath));
-        if (
-          path
-            .dirname(imgAbsPath)
-            .includes(path.join(workspacePath, "attachments"))
-        ) {
-          await convertToWebp(
-            imgAbsPath,
-            path.join(workspacePath, "attachments"),
-            config
-          );
-          await vscode.workspace.fs.rename(
-            vscode.Uri.file(imgAbsPath),
-            vscode.Uri.file(
-              path.join(
-                workspacePath,
-                "attachments",
-                ".trash",
-                path.basename(imgAbsPath)
-              )
-            )
-          );
+    vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: "Converting images...",
+        cancellable: false,
+      },
+      async (progress, token) => {
+        for (const imgPath of imgPathArray) {
+          progress.report({
+            message: `Converting ${imgPathArray.indexOf(imgPath)}/${
+              imgPathArray.length
+            }...`,
+          });
+          try {
+            const imgAbsPath = path.isAbsolute(imgPath)
+              ? imgPath
+              : path.resolve(path.dirname(markdownFilePath), imgPath);
+            await vscode.workspace.fs.stat(vscode.Uri.file(imgAbsPath));
+            if (
+              path
+                .dirname(imgAbsPath)
+                .includes(path.join(workspacePath, "attachments"))
+            ) {
+              await convertToWebp(
+                imgAbsPath,
+                path.join(workspacePath, "attachments"),
+                config
+              );
+              await vscode.workspace.fs.rename(
+                vscode.Uri.file(imgAbsPath),
+                vscode.Uri.file(
+                  path.join(
+                    workspacePath,
+                    "attachments",
+                    ".trash",
+                    path.basename(imgAbsPath)
+                  )
+                )
+              );
+            }
+          } catch (e) {
+            vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
+          }
         }
-      } catch (e) {
-        vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
+
+        editor.edit((editBuilder) => {
+          editBuilder.replace(
+            new vscode.Range(
+              editor.document.positionAt(0),
+              editor.document.positionAt(text.length)
+            ),
+            text.replace(/!\[.*\]\((.*)\)/g, (match, p1) => {
+              return match.replace(p1, p1.replace(/\.[^/.]+$/, ".webp"));
+            })
+          );
+          editor.document.save();
+        });
       }
-    }
-    editor.edit((editBuilder) => {
-      editBuilder.replace(
-        new vscode.Range(
-          editor.document.positionAt(0),
-          editor.document.positionAt(text.length)
-        ),
-        text.replace(/!\[.*\]\((.*)\)/g, (match, p1) => {
-          return match.replace(p1, p1.replace(/\.[^/.]+$/, ".webp"));
-        })
-      );
-      editor.document.save();
-    });
+    );
   } else if (webpOrAvif === "AVIF") {
-    imgPathArray = imgPathArray.filter((imgPath) => {
-      return !imgPath.endsWith(".avif");
-    });
+    imgPathArray = Array.from(
+      new Set(
+        imgPathArray.filter((imgPath) => {
+          return !imgPath.endsWith(".avif");
+        })
+      )
+    );
     const config = vscode.workspace.getConfiguration(
       "vscode-note-taking-extension.avif"
     );
+    vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: "Converting images...",
+        cancellable: false,
+      },
+      async (progress, token) => {
+        for (const imgPath of imgPathArray) {
+          progress.report({
+            message: `Converting ${imgPathArray.indexOf(imgPath)}/${
+              imgPathArray.length
+            }...`,
+          });
+          try {
+            const imgAbsPath = path.isAbsolute(imgPath)
+              ? imgPath
+              : path.resolve(path.dirname(markdownFilePath), imgPath);
+            await vscode.workspace.fs.stat(vscode.Uri.file(imgAbsPath));
+            if (
+              path
+                .dirname(imgAbsPath)
+                .includes(path.join(workspacePath, "attachments"))
+            ) {
+              await convertToAvif(
+                imgAbsPath,
+                path.join(workspacePath, "attachments"),
+                config
+              );
+              await vscode.workspace.fs.rename(
+                vscode.Uri.file(imgAbsPath),
+                vscode.Uri.file(
+                  path.join(
+                    workspacePath,
+                    "attachments",
+                    ".trash",
+                    path.basename(imgAbsPath)
+                  )
+                )
+              );
+            }
+          } catch (e) {
+            console.log(e);
 
-    for (const imgPath of imgPathArray) {
-      try {
-        const imgAbsPath = path.isAbsolute(imgPath)
-          ? imgPath
-          : path.resolve(path.dirname(markdownFilePath), imgPath);
-        await vscode.workspace.fs.stat(vscode.Uri.file(imgAbsPath));
-        if (
-          path
-            .dirname(imgAbsPath)
-            .includes(path.join(workspacePath, "attachments"))
-        ) {
-          await convertToAvif(
-            imgAbsPath,
-            path.join(workspacePath, "attachments"),
-            config
-          );
-          await vscode.workspace.fs.rename(
-            vscode.Uri.file(imgAbsPath),
-            vscode.Uri.file(
-              path.join(
-                workspacePath,
-                "attachments",
-                ".trash",
-                path.basename(imgAbsPath)
-              )
-            )
-          );
+            vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
+          }
         }
-      } catch (e) {
-        console.log(e);
-
-        vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
       }
-    }
+    );
     editor.edit((editBuilder) => {
       editBuilder.replace(
         new vscode.Range(
