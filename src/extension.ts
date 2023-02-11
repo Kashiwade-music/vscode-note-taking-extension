@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import { createNote } from "./command/createNote";
 import { initDir } from "./command/initDir";
 import { convertAttachedImage } from "./command/convertAttachedImage";
+import { cleanAttachmentTrashFolder } from "./command/cleanAttachmentTrashFolder";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -35,6 +36,13 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "vscode-note-taking-extension.convertAttachedImage",
       convertAttachedImage
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "vscode-note-taking-extension.cleanAttachmentTrashFolder",
+      cleanAttachmentTrashFolder
     )
   );
 }

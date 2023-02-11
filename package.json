@@ -33,6 +33,11 @@
         "command": "vscode-note-taking-extension.convertAttachedImage",
         "title": "Convert Attached Image to WebP or AVIF format",
         "category": "Note Taking"
+      },
+      {
+        "command": "vscode-note-taking-extension.cleanAttachmentTrashFolder",
+        "title": "Delete all files in the attachment trash folder (./attachment/.trash)",
+        "category": "Note Taking"
       }
     ],
     "configuration": {
