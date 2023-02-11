@@ -2,7 +2,7 @@
   "name": "vscode-note-taking-extension",
   "displayName": "vscode-note-taking-extension",
   "description": "Create a markdown note page by simply clicking on categories and entering a file name.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -27,6 +27,11 @@
       {
         "command": "vscode-note-taking-extension.initDir",
         "title": "Initialize Note Taking Directory",
+        "category": "Note Taking"
+      },
+      {
+        "command": "vscode-note-taking-extension.convertAttachedImageToWebp",
+        "title": "Convert Attached Image to Webp file format",
         "category": "Note Taking"
       }
     ],
@@ -68,19 +73,19 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.74.0",
     "@types/glob": "^8.0.1",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
+    "@vscode/test-electron": "^2.2.2",
     "eslint": "^8.33.0",
     "glob": "^8.1.0",
     "mocha": "^10.1.0",
-    "typescript": "^4.9.4",
     "ts-loader": "^9.4.2",
+    "typescript": "^4.9.4",
     "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1",
-    "@vscode/test-electron": "^2.2.2"
+    "webpack-cli": "^5.0.1"
   }
 }

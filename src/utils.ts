@@ -1,4 +1,6 @@
 import * as vscode from "vscode";
+import * as path from "path";
+import { execSync } from "child_process";
 
 export interface StringKeyObject {
   [key: string]: StringKeyObject | { [key: string]: never };
@@ -33,6 +35,38 @@ export const getTemplate = async (templates: TemplatesObject) => {
     Object.keys(templates)
   )) as unknown as string;
   return new vscode.SnippetString(templates[template].join("\n"));
+};
+
+// function that get img file path and convert it to webp by using ffmepg cli and save
+// see https://imagemagick.org/script/webp.php
+export const convertToWebp = async (
+  imgPath: string,
+  outputDir: string,
+  lossless: boolean = false,
+  quality: number = 80
+) => {
+  const imgNameWithoutExt = path
+    .basename(vscode.Uri.file(imgPath).fsPath)
+    .split(".")[0];
+  const webpPath =
+    vscode.Uri.file(outputDir).fsPath + `/${imgNameWithoutExt}.webp`;
+  execSync(
+    `magick "${imgPath}" -define webp:lossless=${lossless} -define webp:quality=${quality} "${webpPath}"`
+  );
+};
+
+// function that get img file path and convert it to avif and save
+export const convertToAvif = async (
+  imgPath: string,
+  outputDir: string,
+  quality: number = 80
+) => {
+  const imgNameWithoutExt = path
+    .basename(vscode.Uri.file(imgPath).fsPath)
+    .split(".")[0];
+  const avifPath =
+    vscode.Uri.file(outputDir).fsPath + `/${imgNameWithoutExt}.avif`;
+  execSync(`magick "${imgPath}" -define avif:quality=${quality} "${avifPath}"`);
 };
 
 export const getSettingsJsonString = () => {

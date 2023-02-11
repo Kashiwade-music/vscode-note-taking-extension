@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import * as utils from "./utils";
+import * as path from "path";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -112,7 +113,7 @@ export function activate(context: vscode.ExtensionContext) {
           Buffer.from(utils.getRecommendedExtensions())
         );
         await vscode.workspace.fs.createDirectory(
-          vscode.Uri.file(workspacePath + "/attachments")
+          vscode.Uri.file(workspacePath + "/attachments/.trash")
         );
 
         // create file and open
@@ -123,6 +124,124 @@ export function activate(context: vscode.ExtensionContext) {
         );
         const doc = await vscode.workspace.openTextDocument(file);
         await vscode.window.showTextDocument(doc);
+      }
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "vscode-note-taking-extension.convertAttachedImageToWebp",
+      async () => {
+        // check if workspace is open
+        const workspace = vscode.workspace.workspaceFolders;
+        if (!workspace) {
+          vscode.window.showErrorMessage(
+            "Please open a workspace before converting."
+          );
+          return;
+        }
+
+        // check markdown file is open
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+          vscode.window.showErrorMessage(
+            "Please open a markdown file before converting."
+          );
+          return;
+        }
+        const markdownFilePath = editor.document.uri.fsPath;
+
+        // webp or avif?
+        const webpOrAvif = await vscode.window.showQuickPick(["webp", "avif"], {
+          placeHolder: "Choose a format",
+        });
+
+        // get ![]() and convert its extension to webp
+        const workspacePath = workspace[0].uri.fsPath;
+        const text = editor.document.getText();
+        const imgPathRegExpMatchArray = text.match(/!\[.*\]\((.*)\)/g) || [];
+        if (imgPathRegExpMatchArray.length === 0) {
+          vscode.window.showErrorMessage("No image found.");
+          return;
+        }
+        let imgPathArray = imgPathRegExpMatchArray.map((imgPath) => {
+          return imgPath
+            .replace(/^!\[.*\]/, "")
+            .slice(1)
+            .slice(0, -1);
+        });
+
+        if (webpOrAvif === "webp") {
+          imgPathArray = imgPathArray.filter((imgPath) => {
+            return !imgPath.endsWith(".webp");
+          });
+          for (const imgPath of imgPathArray) {
+            try {
+              await vscode.workspace.fs.stat(
+                vscode.Uri.file(
+                  path.isAbsolute(imgPath)
+                    ? imgPath
+                    : path.resolve(path.dirname(markdownFilePath), imgPath)
+                )
+              );
+              await utils.convertToWebp(
+                path.isAbsolute(imgPath)
+                  ? imgPath
+                  : path.resolve(path.dirname(markdownFilePath), imgPath),
+                path.join(workspacePath, "attachments")
+              );
+            } catch (e) {
+              vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
+            }
+          }
+          editor.edit((editBuilder) => {
+            editBuilder.replace(
+              new vscode.Range(
+                editor.document.positionAt(0),
+                editor.document.positionAt(text.length)
+              ),
+              text.replace(/!\[.*\]\((.*)\)/g, (match, p1) => {
+                return match.replace(p1, p1.replace(/\.[^/.]+$/, ".webp"));
+              })
+            );
+            editor.document.save();
+          });
+        } else if (webpOrAvif === "avif") {
+          imgPathArray = imgPathArray.filter((imgPath) => {
+            return !imgPath.endsWith(".avif");
+          });
+          for (const imgPath of imgPathArray) {
+            try {
+              await vscode.workspace.fs.stat(
+                vscode.Uri.file(
+                  path.isAbsolute(imgPath)
+                    ? imgPath
+                    : path.resolve(path.dirname(markdownFilePath), imgPath)
+                )
+              );
+              await utils.convertToAvif(
+                path.isAbsolute(imgPath)
+                  ? imgPath
+                  : path.resolve(path.dirname(markdownFilePath), imgPath),
+                path.join(workspacePath, "attachments")
+              );
+            } catch (e) {
+              vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
+            }
+          }
+          editor.edit((editBuilder) => {
+            editBuilder.replace(
+              new vscode.Range(
+                editor.document.positionAt(0),
+                editor.document.positionAt(text.length)
+              ),
+              text.replace(/!\[.*\]\((.*)\)/g, (match, p1) => {
+                return match.replace(p1, p1.replace(/\.[^/.]+$/, ".avif"));
+              })
+            );
+            editor.document.save();
+          });
+        }
       }
     )
   );
