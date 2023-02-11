@@ -3,47 +3,58 @@ import * as path from "path";
 
 import { execSync } from "child_process";
 
-// function that get img file path and convert it to webp by using ffmepg cli and save
-// see https://imagemagick.org/script/webp.php
+// function that get img file path and convert it to webp by using libvips cli and save
+// see $ vips webpsave
 const convertToWebp = async (
   imgPath: string,
   outputDir: string,
-  quality: number,
-  lossless: boolean,
-  nearLossless: number
+  config: vscode.WorkspaceConfiguration
 ) => {
   const imgNameWithoutExt = path
     .basename(vscode.Uri.file(imgPath).fsPath)
     .split(".")[0];
   const webpPath =
     vscode.Uri.file(outputDir).fsPath + `/${imgNameWithoutExt}.webp`;
-  execSync(
-    `magick "${imgPath}" -define webp:lossless=${
-      lossless ? "true" : "false"
-    } -define webp:near-lossless=${nearLossless} -define webp:quality=${quality} "${webpPath}"`
-  );
+  const command = `vips webpsave "${imgPath}" "${webpPath}" --Q ${config.get(
+    "quality"
+  )} ${config.get("lossless") ? "--lossless" : ""} ${
+    config.get("smart-subsample") ? "--smart-subsample" : ""
+  } ${
+    config.get("near-lossless") ? "--near-lossless" : ""
+  } --alpha-q ${config.get("alpha-quality")} --effort ${config.get("effort")}`;
+  execSync(command);
 };
 
 // function that get img file path and convert it to avif and save
 const convertToAvif = async (
   imgPath: string,
   outputDir: string,
-  quality: number,
-  lossless: boolean
+  config: vscode.WorkspaceConfiguration
 ) => {
   const imgNameWithoutExt = path
     .basename(vscode.Uri.file(imgPath).fsPath)
     .split(".")[0];
   const avifPath =
     vscode.Uri.file(outputDir).fsPath + `/${imgNameWithoutExt}.avif`;
-  execSync(
-    `magick "${imgPath}" -define avif:quality=${quality} -define avif:lossless=${
-      lossless ? "true" : "false"
-    } "${avifPath}"`
-  );
+  const command = `vips heifsave "${imgPath}" "${avifPath}" --Q ${config.get(
+    "quality"
+  )} ${
+    config.get("lossless") ? "--lossless" : ""
+  } --compression av1 --effort ${config.get("effort")}`;
+  execSync(command);
 };
 
 export const convertAttachedImage = async () => {
+  // check we can use vips
+  try {
+    execSync("vips --version");
+  } catch (e) {
+    vscode.window.showErrorMessage(
+      "Please install libvips before converting. Please see https://www.libvips.org/install.html"
+    );
+    return;
+  }
+
   // check if workspace is open
   const workspace = vscode.workspace.workspaceFolders;
   if (!workspace) {
@@ -90,9 +101,6 @@ export const convertAttachedImage = async () => {
     const config = vscode.workspace.getConfiguration(
       "vscode-note-taking-extension.webp"
     );
-    const quality = config.get("quality") as number;
-    const lossless = config.get("lossless") as boolean;
-    const nearLossless = config.get("nearLossless") as number;
     for (const imgPath of imgPathArray) {
       try {
         const imgAbsPath = path.isAbsolute(imgPath)
@@ -107,9 +115,7 @@ export const convertAttachedImage = async () => {
           await convertToWebp(
             imgAbsPath,
             path.join(workspacePath, "attachments"),
-            quality,
-            lossless,
-            nearLossless
+            config
           );
           await vscode.workspace.fs.rename(
             vscode.Uri.file(imgAbsPath),
@@ -146,8 +152,6 @@ export const convertAttachedImage = async () => {
     const config = vscode.workspace.getConfiguration(
       "vscode-note-taking-extension.avif"
     );
-    const quality = config.get("quality") as number;
-    const lossless = config.get("lossless") as boolean;
 
     for (const imgPath of imgPathArray) {
       try {
@@ -163,8 +167,7 @@ export const convertAttachedImage = async () => {
           await convertToAvif(
             imgAbsPath,
             path.join(workspacePath, "attachments"),
-            quality,
-            lossless
+            config
           );
           await vscode.workspace.fs.rename(
             vscode.Uri.file(imgAbsPath),
@@ -179,6 +182,8 @@ export const convertAttachedImage = async () => {
           );
         }
       } catch (e) {
+        console.log(e);
+
         vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
       }
     }

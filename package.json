@@ -60,18 +60,33 @@
         },
         "vscode-note-taking-extension.webp.quality": {
           "type": "number",
-          "description": "Quality of WebP image.",
+          "description": "Quality of WebP image. min: 0, max: 100",
           "default": 90
         },
         "vscode-note-taking-extension.webp.lossless": {
           "type": "boolean",
-          "description": "Lossless WebP image.",
+          "description": "Enable lossless compression mode.",
           "default": false
         },
-        "vscode-note-taking-extension.webp.nearLossless": {
+        "vscode-note-taking-extension.webp.smart-subsample": {
+          "type": "boolean",
+          "description": "Enable high quality chroma subsampling for YUV.",
+          "default": false
+        },
+        "vscode-note-taking-extension.webp.near-lossless": {
+          "type": "boolean",
+          "description": "Enable preprocessing in lossless mode (uses Q).",
+          "default": false
+        },
+        "vscode-note-taking-extension.webp.alpha-quality": {
           "type": "number",
-          "description": "the near lossless encoding, between 0 (max-loss) and 100 (off).",
+          "description": "Change alpha plane fidelity for lossy compression. min: 0, max: 100",
           "default": 100
+        },
+        "vscode-note-taking-extension.webp.effort": {
+          "type": "number",
+          "description": "Level of CPU effort to reduce file size. min: 0, max: 6",
+          "default": 4
         },
         "vscode-note-taking-extension.avif.quality": {
           "type": "number",
@@ -82,6 +97,11 @@
           "type": "boolean",
           "description": "Lossless avif image.",
           "default": false
+        },
+        "vscode-note-taking-extension.avif.effort": {
+          "type": "number",
+          "description": "CPU effort. min: 0, max: 9",
+          "default": 9
         }
       }
     }
