@@ -160,7 +160,8 @@ export const convertAttachedImageToWebp = async () => {
                   ".trash",
                   path.basename(imgAbsPath)
                 )
-              )
+              ),
+              { overwrite: true }
             );
             text = text.replace(
               `](${imgPath})`,
@@ -257,7 +258,8 @@ export const convertAttachedImageToLosslessWebp = async () => {
                   ".trash",
                   path.basename(imgAbsPath)
                 )
-              )
+              ),
+              { overwrite: true }
             );
             text = text.replace(
               `](${imgPath})`,
@@ -353,7 +355,8 @@ export const convertAttachedImageToAvif = async () => {
                   ".trash",
                   path.basename(imgAbsPath)
                 )
-              )
+              ),
+              { overwrite: true }
             );
             text = text.replace(
               `](${imgPath})`,
