@@ -99,7 +99,7 @@ export const convertAttachedImageToWebp = async () => {
 
   // get ![]() and convert its extension to webp
   const workspacePath = workspace[0].uri.fsPath;
-  const text = editor.document.getText();
+  let text = editor.document.getText();
   const imgPathRegExpMatchArray = text.match(/!\[.*\]\((.*)\)/g) || [];
   if (imgPathRegExpMatchArray.length === 0) {
     vscode.window.showErrorMessage("No image found.");
@@ -162,24 +162,27 @@ export const convertAttachedImageToWebp = async () => {
                 )
               )
             );
+            text = text.replace(
+              `](${imgPath})`,
+              `](${imgPath.replace(path.extname(imgPath), "")}.webp)`
+            );
           }
         } catch (e) {
+          console.log(e);
+
           vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
         }
       }
-
       editor.edit((editBuilder) => {
         editBuilder.replace(
           new vscode.Range(
             editor.document.positionAt(0),
-            editor.document.positionAt(text.length)
+            editor.document.positionAt(editor.document.getText().length)
           ),
-          text.replace(/!\[.*\]\((.*)\)/g, (match, p1) => {
-            return match.replace(p1, p1.replace(/\.[^/.]+$/, ".webp"));
-          })
+          text
         );
-        editor.document.save();
       });
+      await editor.document.save();
     }
   );
 };
@@ -193,7 +196,7 @@ export const convertAttachedImageToLosslessWebp = async () => {
 
   // get ![]() and convert its extension to webp
   const workspacePath = workspace[0].uri.fsPath;
-  const text = editor.document.getText();
+  let text = editor.document.getText();
   const imgPathRegExpMatchArray = text.match(/!\[.*\]\((.*)\)/g) || [];
   if (imgPathRegExpMatchArray.length === 0) {
     vscode.window.showErrorMessage("No image found.");
@@ -256,24 +259,27 @@ export const convertAttachedImageToLosslessWebp = async () => {
                 )
               )
             );
+            text = text.replace(
+              `](${imgPath})`,
+              `](${imgPath.replace(path.extname(imgPath), "")}.webp)`
+            );
           }
         } catch (e) {
+          console.log(e);
+
           vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
         }
       }
-
       editor.edit((editBuilder) => {
         editBuilder.replace(
           new vscode.Range(
             editor.document.positionAt(0),
-            editor.document.positionAt(text.length)
+            editor.document.positionAt(editor.document.getText().length)
           ),
-          text.replace(/!\[.*\]\((.*)\)/g, (match, p1) => {
-            return match.replace(p1, p1.replace(/\.[^/.]+$/, ".webp"));
-          })
+          text
         );
-        editor.document.save();
       });
+      await editor.document.save();
     }
   );
 };
@@ -287,7 +293,7 @@ export const convertAttachedImageToAvif = async () => {
 
   // get ![]() and convert its extension to webp
   const workspacePath = workspace[0].uri.fsPath;
-  const text = editor.document.getText();
+  let text = editor.document.getText();
   const imgPathRegExpMatchArray = text.match(/!\[.*\]\((.*)\)/g) || [];
   if (imgPathRegExpMatchArray.length === 0) {
     vscode.window.showErrorMessage("No image found.");
@@ -349,25 +355,26 @@ export const convertAttachedImageToAvif = async () => {
                 )
               )
             );
+            text = text.replace(
+              `](${imgPath})`,
+              `](${imgPath.replace(path.extname(imgPath), "")}.avif)`
+            );
           }
         } catch (e) {
           console.log(e);
-
           vscode.window.showErrorMessage(`Failed to convert ${imgPath}.`);
         }
       }
+      editor.edit((editBuilder) => {
+        editBuilder.replace(
+          new vscode.Range(
+            editor.document.positionAt(0),
+            editor.document.positionAt(editor.document.getText().length)
+          ),
+          text
+        );
+      });
+      await editor.document.save();
     }
   );
-  editor.edit((editBuilder) => {
-    editBuilder.replace(
-      new vscode.Range(
-        editor.document.positionAt(0),
-        editor.document.positionAt(text.length)
-      ),
-      text.replace(/!\[.*\]\((.*)\)/g, (match, p1) => {
-        return match.replace(p1, p1.replace(/\.[^/.]+$/, ".avif"));
-      })
-    );
-    editor.document.save();
-  });
 };
