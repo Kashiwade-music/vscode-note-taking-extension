@@ -3,7 +3,7 @@
 import * as vscode from "vscode";
 import { createNote } from "./command/createNote";
 import { initDir } from "./command/initDir";
-import { convertAttachedImage } from "./command/convertAttachedImage";
+import * as Convert from "./command/convertAttachedImage";
 import { cleanAttachmentTrashFolder } from "./command/cleanAttachmentTrashFolder";
 
 // This method is called when your extension is activated
@@ -34,8 +34,22 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "vscode-note-taking-extension.convertAttachedImage",
-      convertAttachedImage
+      "vscode-note-taking-extension.convertAttachedImageToWebp",
+      Convert.convertAttachedImageToWebp
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "vscode-note-taking-extension.convertAttachedImageToLosslessWebp",
+      Convert.convertAttachedImageToLosslessWebp
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "vscode-note-taking-extension.convertAttachedImageToAvif",
+      Convert.convertAttachedImageToAvif
     )
   );
 

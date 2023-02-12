@@ -30,8 +30,18 @@
         "category": "Note Taking"
       },
       {
-        "command": "vscode-note-taking-extension.convertAttachedImage",
-        "title": "Convert Attached Image to WebP or AVIF format",
+        "command": "vscode-note-taking-extension.convertAttachedImageToWebp",
+        "title": "Convert Attached Image to WebP format",
+        "category": "Note Taking"
+      },
+      {
+        "command": "vscode-note-taking-extension.convertAttachedImageToLosslessWebp",
+        "title": "Convert Attached Image to Lossless WebP format",
+        "category": "Note Taking"
+      },
+      {
+        "command": "vscode-note-taking-extension.convertAttachedImageToAvif",
+        "title": "Convert Attached Image to AVIF format",
         "category": "Note Taking"
       },
       {
@@ -68,11 +78,6 @@
           "description": "Quality of WebP image. min: 0, max: 100",
           "default": 90
         },
-        "vscode-note-taking-extension.webp.lossless": {
-          "type": "boolean",
-          "description": "Enable lossless compression mode.",
-          "default": false
-        },
         "vscode-note-taking-extension.webp.smart-subsample": {
           "type": "boolean",
           "description": "Enable high quality chroma subsampling for YUV.",
@@ -100,7 +105,7 @@
         },
         "vscode-note-taking-extension.avif.lossless": {
           "type": "boolean",
-          "description": "Lossless avif image.",
+          "description": "Lossless avif image. But this is not stable so not recommended.",
           "default": false
         },
         "vscode-note-taking-extension.avif.effort": {
