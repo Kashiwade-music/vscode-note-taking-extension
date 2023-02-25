@@ -96,7 +96,7 @@
         "vscode-note-taking-extension.webp.effort": {
           "type": "number",
           "description": "Level of CPU effort to reduce file size. min: 0, max: 6",
-          "default": 4
+          "default": 6
         },
         "vscode-note-taking-extension.avif.quality": {
           "type": "number",
