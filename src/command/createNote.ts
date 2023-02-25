@@ -12,9 +12,9 @@ const genNewNotePath = async (categories: StringKeyObject): Promise<string> => {
     );
     return "";
   }
-  let category = (await vscode.window.showQuickPick(
-    Object.keys(categories)
-  )) as unknown as string;
+  let category = (await vscode.window.showQuickPick(Object.keys(categories), {
+    placeHolder: "Select a category",
+  })) as unknown as string;
 
   if (Object.keys(categories[category]).length > 0) {
     const subs = await genNewNotePath(categories[category]);
@@ -29,9 +29,9 @@ interface TemplatesObject {
 }
 
 const getTemplate = async (templates: TemplatesObject) => {
-  let template = (await vscode.window.showQuickPick(
-    Object.keys(templates)
-  )) as unknown as string;
+  let template = (await vscode.window.showQuickPick(Object.keys(templates), {
+    placeHolder: "Select a template",
+  })) as unknown as string;
   return new vscode.SnippetString(templates[template].join("\n"));
 };
 
@@ -45,13 +45,14 @@ export const createNote = async () => {
   if (notePath === "") {
     return;
   }
-  const fileName = await vscode.window.showInputBox({
-    prompt: "Enter file name",
-  });
 
   const template = await getTemplate(
     config.get("templates") as TemplatesObject
   );
+
+  const fileName = await vscode.window.showInputBox({
+    prompt: "Enter file name",
+  });
 
   // create dir current workspace if not exists
   const workspace = vscode.workspace.workspaceFolders;

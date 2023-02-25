@@ -1,12 +1,21 @@
 # vscode-note-taking-extension
 
 create your note by a few click
+![Alt text](doc/Animation.gif)
 
+## Feature
+- initialize directory
+- create markdown file
+- markdown template
+- create based on hierarchical categories
+- batch conversion of image files contained in notes
+  - WebP and AVIF
 
 ## PNG/JPEG vs WebP vs AVIF
 **Notice:** bold text is default settings
 **Notice:** Lossless mode of AVIF is something wrong @vips-8.14.1
 **Notice:** see ./docs to check the processed images
+
 
 ### Large Nature Image
 4288x2848
