@@ -1,6 +1,6 @@
 {
   "name": "vscode-note-taking-extension",
-  "displayName": "vscode-note-taking-extension",
+  "displayName": "VSCode Note Taking Extension",
   "description": "Create a markdown note page by simply clicking on categories and entering a file name.",
   "version": "0.0.3",
   "publisher": "Kashiwade",
@@ -10,6 +10,7 @@
   "categories": [
     "Other"
   ],
+  "icon": "doc/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Kashiwade-music/vscode-note-taking-extension.git"

@@ -12,8 +12,11 @@ create your note by a few click
   - WebP and AVIF
 
 ## PNG/JPEG vs WebP vs AVIF
+
 **Notice:** bold text is default settings
+
 **Notice:** Lossless mode of AVIF is something wrong @vips-8.14.1
+
 **Notice:** see ./docs to check the processed images
 
 
