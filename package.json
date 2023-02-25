@@ -2,7 +2,7 @@
   "name": "vscode-note-taking-extension",
   "displayName": "VSCode Note Taking Extension",
   "description": "Create a markdown note page by simply clicking on categories and entering a file name.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "Kashiwade",
   "engines": {
     "vscode": "^1.74.0"
